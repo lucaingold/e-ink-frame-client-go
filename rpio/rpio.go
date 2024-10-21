@@ -67,7 +67,7 @@ and https://elinux.org/BCM2835_datasheet_errata - for errors in that spec
 
 Changes to support the BCM2711, used on the Raspberry Pi 4, were cribbed from https://github.com/RPi-Distro/raspi-gpio/
 */
-package main
+package rpio
 
 import (
 	"bytes"
@@ -753,7 +753,7 @@ func backupIRQs() {
 
 // Open and memory map GPIO memory range from /dev/mem .
 // Some reflection magic is used to convert it to a unsafe []uint32 pointer
-func OpenRpio() (err error) {
+func Open() (err error) {
 	var file *os.File
 
 	// Open fd for rw mem access; try dev/mem first (need root)
@@ -828,7 +828,7 @@ func memMap(fd uintptr, base int64) (mem []uint32, mem8 []byte, err error) {
 }
 
 // Close unmaps GPIO memory
-func CloseRpio() error {
+func Close() error {
 	EnableIRQs(irqsBackup) // Return IRQs to state where it was before - just to be nice
 
 	memlock.Lock()

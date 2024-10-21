@@ -1,6 +1,7 @@
-package main
+package epd
 
 import (
+	"eink-go-client/rpio"
 	"log"
 	"time"
 )
@@ -14,16 +15,16 @@ const (
 )
 
 var (
-	rstPin   Pin
-	csPin    Pin
-	readyPin Pin
+	rstPin   rpio.Pin
+	csPin    rpio.Pin
+	readyPin rpio.Pin
 )
 
 // Open sets the I/O ports and SPI
 func Open() (err error) {
 	Debug("Init start")
 
-	if err := OpenRpio(); err != nil {
+	if err := rpio.Open(); err != nil {
 		log.Fatalln("RPIO Open Error:", err)
 	}
 
@@ -33,13 +34,13 @@ func Open() (err error) {
 
 	Debug("Initializing SPI")
 
-	if err := SpiBegin(Spi0); err != nil {
+	if err := rpio.SpiBegin(rpio.Spi0); err != nil {
 		log.Fatalln("SpiBegin Error:", err)
 	}
 
-	SpiChipSelect(0)
-	SpiSpeed(24000000) // 24MHz
-	SpiMode(0, 0)
+	rpio.SpiChipSelect(0)
+	rpio.SpiSpeed(24000000) // 24MHz
+	rpio.SpiMode(0, 0)
 
 	//
 	// init pins
@@ -47,9 +48,9 @@ func Open() (err error) {
 
 	Debug("Initializing GPIO pins")
 
-	rstPin = Pin(EpdRstPin)
-	csPin = Pin(EpdCsPin)
-	readyPin = Pin(EpdBusyPin)
+	rstPin = rpio.Pin(EpdRstPin)
+	csPin = rpio.Pin(EpdCsPin)
+	readyPin = rpio.Pin(EpdBusyPin)
 
 	rstPin.Output()
 	csPin.Output()
@@ -67,9 +68,9 @@ func Close() {
 	csPin.Low()
 	rstPin.Low()
 
-	SpiEnd(Spi0)
+	rpio.SpiEnd(rpio.Spi0)
 
-	CloseRpio()
+	rpio.Close()
 }
 
 // csOn selects slave

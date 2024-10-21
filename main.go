@@ -1,6 +1,7 @@
 package main
 
 import (
+	"eink-go-client/epd"
 	"fmt"
 	MQTT "github.com/eclipse/paho.mqtt.golang"
 	"github.com/spf13/viper"
@@ -9,7 +10,7 @@ import (
 	"syscall"
 )
 
-var devInfo *DevInfo // Global variable for device information
+var devInfo *epd.DevInfo // Global variable for device information
 
 func main() {
 	// Initialize Viper
@@ -35,9 +36,9 @@ func main() {
 	}
 
 	vcom := viper.GetUint16("display.vcom")
-	devInfo := Init(vcom)
+	devInfo := epd.Init(vcom)
 	fmt.Println(devInfo)
-	defer Exit()
+	defer epd.Exit()
 
 	if err := c.Subscribe(topic, func(_ MQTT.Client, m MQTT.Message) {
 		fmt.Printf("Message: %s \n", m.Payload())
@@ -47,7 +48,7 @@ func main() {
 		imageBytes := m.Payload() // Get the byte array from the message
 
 		// Create a DataBuffer from the received byte array
-		var imageBuffer DataBuffer
+		var imageBuffer epd.DataBuffer
 		imageBuffer = createDataBuffer(imageBytes) // Implement this function to convert byte array to DataBuffer
 
 		// Call the displayImage function
@@ -68,18 +69,18 @@ func main() {
 	c.mqttClient.Disconnect(250)
 }
 
-func displayImage(imageBuffer DataBuffer, x, y, width, height uint16) {
+func displayImage(imageBuffer epd.DataBuffer, x, y, width, height uint16) {
 	// Set up load image info
-	imageInfo := LoadImgInfo{
-		EndianType:       LoadImgLittleEndian,
-		PixelFormat:      BPP4,                    // Assuming 4 bits per pixel
-		Rotate:           Rotate0,                 // No rotation
+	imageInfo := epd.LoadImgInfo{
+		EndianType:       epd.LoadImgLittleEndian,
+		PixelFormat:      epd.BPP4,                // Assuming 4 bits per pixel
+		Rotate:           epd.Rotate0,             // No rotation
 		SourceBufferAddr: imageBuffer,             // Your image data
 		TargetMemAddr:    devInfo.TargetAddress(), // Target memory address from device info
 	}
 
 	// Define the area to display
-	areaInfo := AreaImgInfo{
+	areaInfo := epd.AreaImgInfo{
 		X: x,
 		Y: y,
 		W: width,
@@ -88,10 +89,10 @@ func displayImage(imageBuffer DataBuffer, x, y, width, height uint16) {
 
 	// Load image and display it
 	imageInfo.HostAreaPackedPixelWrite(areaInfo, 4, true)
-	DisplayArea(x, y, width, height, GC16Mode)
+	epd.DisplayArea(x, y, width, height, epd.GC16Mode)
 }
 
-func createDataBuffer(imageBytes []byte) DataBuffer {
+func createDataBuffer(imageBytes []byte) epd.DataBuffer {
 	// Ensure the byte slice can be converted to uint16
 	if len(imageBytes)%2 != 0 {
 		fmt.Println("Warning: Image byte length is not even, truncating last byte.")
@@ -99,7 +100,7 @@ func createDataBuffer(imageBytes []byte) DataBuffer {
 	}
 
 	// Create a DataBuffer of the appropriate size
-	buffer := make(DataBuffer, len(imageBytes)/2)
+	buffer := make(epd.DataBuffer, len(imageBytes)/2)
 
 	// Convert byte array to uint16
 	for i := 0; i < len(imageBytes); i += 2 {

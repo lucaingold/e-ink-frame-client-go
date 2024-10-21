@@ -1,7 +1,8 @@
-package main
+package epd
 
 import (
 	"bytes"
+	"eink-go-client/rpio"
 	"encoding/binary"
 	"flag"
 	"fmt"
@@ -192,7 +193,7 @@ func Exit() {
 
 func waitReady() {
 	//Debug("...")
-	for readyPin.Read() == Low {
+	for readyPin.Read() == rpio.Low {
 		time.Sleep(time.Duration(10) * time.Microsecond)
 	}
 	//Debug("SPI Ready")
@@ -200,12 +201,12 @@ func waitReady() {
 
 func writeUint16(word uint16) {
 	//Debug("-> %04x", word)
-	SpiTransmit(byte(word >> 8))
-	SpiTransmit(byte(word & 0xff))
+	rpio.SpiTransmit(byte(word >> 8))
+	rpio.SpiTransmit(byte(word & 0xff))
 }
 
 func readUint16() (word uint16) {
-	data := SpiReceive(2)
+	data := rpio.SpiReceive(2)
 	word = uint16(data[0])<<8 + uint16(data[1])
 	//Debug("<- %04x", word)
 	return

@@ -1,17 +1,19 @@
-package main
+package mqtt
 
 import (
 	"fmt"
 	MQTT "github.com/eclipse/paho.mqtt.golang"
+	"github.com/google/uuid"
 )
 
-type client struct {
-	mqttClient MQTT.Client
+type Client struct {
+	MqttClient MQTT.Client
 }
 
-func newClient(mqttConfig map[string]string) (*client, error) {
+func NewClient(mqttConfig map[string]string) (*Client, error) {
+	fmt.Printf("Creating MQTT client with ID: %s\n", mqttConfig["client_id"])
 	broker := mqttConfig["broker"]
-	clientID := mqttConfig["client_id"]
+	clientID := uuid.New().String()
 	opts := MQTT.NewClientOptions()
 	opts.AddBroker(fmt.Sprintf("ssl://%s:%s", broker, mqttConfig["port"]))
 	opts.SetClientID(clientID)
@@ -26,20 +28,20 @@ func newClient(mqttConfig map[string]string) (*client, error) {
 		return nil, token.Error()
 	}
 
-	return &client{
+	return &Client{
 		mqttClient,
 	}, nil
 }
 
-func (c *client) Publish(msg, topic string) error {
-	if token := c.mqttClient.Publish(topic, 1, false, msg); token.Wait() && token.Error() != nil {
+func (c *Client) Publish(msg, topic string) error {
+	if token := c.MqttClient.Publish(topic, 1, false, msg); token.Wait() && token.Error() != nil {
 		return token.Error()
 	}
 	return nil
 }
 
-func (c *client) Subscribe(topic string, f MQTT.MessageHandler) error {
-	if token := c.mqttClient.Subscribe(topic, 0, f); token.Wait() && token.Error() != nil {
+func (c *Client) Subscribe(topic string, f MQTT.MessageHandler) error {
+	if token := c.MqttClient.Subscribe(topic, 0, f); token.Wait() && token.Error() != nil {
 		return token.Error()
 	}
 	return nil

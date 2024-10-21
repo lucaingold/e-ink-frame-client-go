@@ -2,6 +2,7 @@ package main
 
 import (
 	"eink-go-client/epd"
+	"eink-go-client/mqtt"
 	"fmt"
 	MQTT "github.com/eclipse/paho.mqtt.golang"
 	"github.com/spf13/viper"
@@ -25,7 +26,7 @@ func main() {
 
 	topic := viper.GetString("mqtt.topic")
 
-	c, err := newClient(mqttConfig)
+	c, err := mqtt.NewClient(mqttConfig)
 
 	if err != nil {
 		panic(fmt.Errorf("failed to create MQTT client: %v", err))
@@ -65,8 +66,8 @@ func main() {
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
 	<-sigChan
 
-	c.mqttClient.Unsubscribe(topic)
-	c.mqttClient.Disconnect(250)
+	c.MqttClient.Unsubscribe(topic)
+	c.MqttClient.Disconnect(250)
 }
 
 func displayImage(imageBuffer epd.DataBuffer, x, y, width, height uint16) {

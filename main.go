@@ -37,6 +37,7 @@ func main() {
 	}
 
 	vcom := viper.GetUint16("display.vcom")
+	fmt.Printf("vcom: %s\n", vcom)
 	devInfo := epd.Init(vcom)
 	fmt.Println(devInfo)
 	defer epd.Exit()

@@ -11,9 +11,9 @@ type Client struct {
 }
 
 func NewClient(mqttConfig map[string]string) (*Client, error) {
-	fmt.Printf("Creating MQTT client with ID: %s\n", mqttConfig["client_id"])
 	broker := mqttConfig["broker"]
 	clientID := uuid.New().String()
+	fmt.Printf("Creating MQTT client with ID: %s\n", clientID)
 	opts := MQTT.NewClientOptions()
 	opts.AddBroker(fmt.Sprintf("ssl://%s:%s", broker, mqttConfig["port"]))
 	opts.SetClientID(clientID)

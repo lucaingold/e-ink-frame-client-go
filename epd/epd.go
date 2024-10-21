@@ -167,16 +167,16 @@ func Debug(format string, args ...interface{}) {
 
 // Init the EPD modules with desired VCOM value
 func Init(vcom uint16) *DevInfo {
-	Open()
+	err := Open()
+	if err != nil {
+		return nil
+	}
 	Reset()
 	SystemRun()
 	devInfo := GetSystemInfo()
 	lut := wordsToString(devInfo.LUTVersion)
+	fmt.Printf("lut: %s\n", lut)
 	A2Mode = 6
-	// special case for 6" e-ink Paper
-	if lut == "M641" {
-		A2Mode = 4
-	}
 	WriteRegister(I80CPCR, 0x0001) // packed mode
 	waitReady()
 	if vcom != ReadVCOM() {

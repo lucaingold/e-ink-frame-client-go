@@ -34,9 +34,9 @@ func Open() (err error) {
 
 	Debug("Initializing SPI")
 
-	if err := rpio.SpiBegin(rpio.Spi0); err != nil {
-		log.Fatalln("SpiBegin Error:", err)
-	}
+	// if err := rpio.SpiBegin(rpio.Spi0); err != nil {
+	// 	log.Fatalln("SpiBegin Error:", err)
+	// }
 
 	rpio.SpiChipSelect(0)
 	rpio.SpiSpeed(24000000) // 24MHz

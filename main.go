@@ -48,6 +48,10 @@ func main() {
 	fmt.Printf("Device Info: %+v\n", devInfo)
 
 	imageBytes2, error2 := os.ReadFile("./img/sample.jpeg")
+	if error2 != nil {
+		fmt.Printf("Failed to read image file: %v\n", error2)
+		return
+	}
 	imageBuffer2 := createDataBuffer(imageBytes2)
 	displayImage(imageBuffer2, 0, 0, devInfo.PanelW, devInfo.PanelH)
 

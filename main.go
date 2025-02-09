@@ -38,11 +38,11 @@ func main() {
 		panic("MQTT client is nil")
 	}
 
-	vcomFloat := viper.GetFloat64("display.vcom")
+	vcomFloat := viper.GetFloat64("screen.vcom")
 	vcomUint16 := uint16(-vcomFloat * 1000) // Convert to positive millivolts
 	fmt.Printf("vcom: %.2f V (%d mV)\n", vcomFloat, vcomUint16)
 	fmt.Println(devInfo)
-	defer epd.Exit()
+	epd.Init(vcomUint16)
 
 	if err := c.Subscribe(topic, func(_ MQTT.Client, m MQTT.Message) {
 		fmt.Printf("Message: %s \n", m.Payload())
@@ -63,6 +63,7 @@ func main() {
 
 		// Call the displayImage function
 		displayImage(imageBuffer, 0, 0, devInfo.PanelW, devInfo.PanelH)
+		epd.Sleep()
 	}); err != nil {
 		panic(err)
 	}
@@ -75,6 +76,7 @@ func main() {
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
 	<-sigChan
 
+	defer epd.Exit()
 	c.MqttClient.Unsubscribe(topic)
 	c.MqttClient.Disconnect(250)
 }

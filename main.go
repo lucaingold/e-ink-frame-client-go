@@ -49,11 +49,17 @@ func main() {
 		fmt.Printf("Topic: %s \n", m.Topic())
 
 		fmt.Printf("Received message on topic %s\n", m.Topic())
-		imageBytes := m.Payload() // Get the byte array from the message
+		imagePath := "./img/sample.jpeg"
 
-		// Create a DataBuffer from the received byte array
-		var imageBuffer epd.DataBuffer
-		imageBuffer = createDataBuffer(imageBytes) // Implement this function to convert byte array to DataBuffer
+		// Read the image file
+		imageBytes, err := os.ReadFile(imagePath)
+		if err != nil {
+			fmt.Printf("Failed to read image file: %v\n", err)
+			return
+		}
+
+		// Create a DataBuffer from the read byte array
+		imageBuffer := createDataBuffer(imageBytes)
 
 		// Call the displayImage function
 		displayImage(imageBuffer, 0, 0, devInfo.PanelW, devInfo.PanelH)

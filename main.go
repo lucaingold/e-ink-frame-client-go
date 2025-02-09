@@ -41,8 +41,11 @@ func main() {
 	vcomFloat := viper.GetFloat64("screen.vcom")
 	vcomUint16 := uint16(-vcomFloat * 1000) // Convert to positive millivolts
 	fmt.Printf("vcom: %.2f V (%d mV)\n", vcomFloat, vcomUint16)
-	fmt.Println(devInfo)
-	epd.Init(vcomUint16)
+	devInfo = epd.Init(vcomUint16)
+	if devInfo == nil {
+		panic("Failed to initialize EPD device")
+	}
+	fmt.Printf("Device Info: %+v\n", devInfo)
 
 	if err := c.Subscribe(topic, func(_ MQTT.Client, m MQTT.Message) {
 		fmt.Printf("Message: %s \n", m.Payload())

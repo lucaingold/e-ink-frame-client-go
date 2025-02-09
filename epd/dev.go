@@ -35,17 +35,6 @@ func Open() (err error) {
 	Debug("Initializing SPI")
 
 	if err := rpio.SpiBegin(rpio.Spi0); err != nil {
-		print("SpiBegin Error SPI0:", err)
-	}
-	if err := rpio.SpiBegin(rpio.Spi1); err != nil {
-		print("SpiBegin Error SPI1:", err)
-	}
-
-	if err := rpio.SpiBegin(rpio.Spi2); err != nil {
-		print("SpiBegin Error SPI2:", err)
-	}
-
-	if err := rpio.SpiBegin(rpio.Spi0); err != nil {
 		log.Fatalln("SpiBegin Error:", err)
 	}
 

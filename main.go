@@ -4,16 +4,18 @@ import (
 	"eink-go-client/epd"
 	"eink-go-client/mqtt"
 	"fmt"
-	MQTT "github.com/eclipse/paho.mqtt.golang"
-	"github.com/spf13/viper"
 	"os"
 	"os/signal"
 	"syscall"
+
+	MQTT "github.com/eclipse/paho.mqtt.golang"
+	"github.com/spf13/viper"
 )
 
 var devInfo *epd.DevInfo // Global variable for device information
 
 func main() {
+	fmt.Println("Starting...")
 	// Initialize Viper
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
@@ -37,7 +39,7 @@ func main() {
 	}
 
 	vcom := viper.GetUint16("display.vcom")
-	fmt.Printf("vcom: %s\n", vcom)
+	fmt.Printf("vcom: %d\n", vcom)
 	devInfo := epd.Init(vcom)
 	fmt.Println(devInfo)
 	defer epd.Exit()

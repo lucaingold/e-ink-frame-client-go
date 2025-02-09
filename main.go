@@ -38,9 +38,9 @@ func main() {
 		panic("MQTT client is nil")
 	}
 
-	vcom := viper.GetUint16("display.vcom")
-	fmt.Printf("vcom: %d\n", vcom)
-	devInfo := epd.Init(vcom)
+	vcomFloat := viper.GetFloat64("display.vcom")
+	vcomUint16 := uint16(-vcomFloat * 1000) // Convert to positive millivolts
+	fmt.Printf("vcom: %.2f V (%d mV)\n", vcomFloat, vcomUint16)
 	fmt.Println(devInfo)
 	defer epd.Exit()
 

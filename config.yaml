@@ -17,4 +17,4 @@ screen:
   width: 1600
   brightness_factor: 1.0
   darkness_threshold: 100
-  vcom=-2.27
+  vcom: -2.27

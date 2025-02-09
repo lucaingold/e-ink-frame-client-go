@@ -62,6 +62,7 @@ func main() {
 		imageBuffer := createDataBuffer(imageBytes)
 
 		// Call the displayImage function
+		fmt.Println("Displaying image...")
 		displayImage(imageBuffer, 0, 0, devInfo.PanelW, devInfo.PanelH)
 		epd.Sleep()
 	}); err != nil {

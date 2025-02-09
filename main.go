@@ -47,6 +47,10 @@ func main() {
 	}
 	fmt.Printf("Device Info: %+v\n", devInfo)
 
+	imageBytes2, error2 := os.ReadFile("./img/sample.jpeg")
+	imageBuffer2 := createDataBuffer(imageBytes2)
+	displayImage(imageBuffer2, 0, 0, devInfo.PanelW, devInfo.PanelH)
+
 	if err := c.Subscribe(topic, func(_ MQTT.Client, m MQTT.Message) {
 		fmt.Printf("Message: %s \n", m.Payload())
 		fmt.Printf("Topic: %s \n", m.Topic())
@@ -55,9 +59,9 @@ func main() {
 		imagePath := "./img/sample.jpeg"
 
 		// Read the image file
-		imageBytes, err := os.ReadFile(imagePath)
+		imageBytes, error := os.ReadFile(imagePath)
 		if err != nil {
-			fmt.Printf("Failed to read image file: %v\n", err)
+			fmt.Printf("Failed to read image file: %v\n", error)
 			return
 		}
 

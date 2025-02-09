@@ -179,6 +179,7 @@ func Init(vcom uint16) *DevInfo {
 	A2Mode = 6
 	WriteRegister(I80CPCR, 0x0001) // packed mode
 	waitReady()
+	print("init VCOM = -%.02fV\n", float32(ReadVCOM())/1000)
 	if vcom != ReadVCOM() {
 		WriteVCOM(vcom)
 		Debug("VCOM = -%.02fV\n", float32(ReadVCOM())/1000)

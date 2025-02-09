@@ -167,14 +167,14 @@ func Debug(format string, args ...interface{}) {
 
 // Init the EPD modules with desired VCOM value
 func Init(vcom uint16) *DevInfo {
-	print("start opening")
 	err := Open()
-	print("opened")
 	if err != nil {
 		return nil
 	}
 	Reset()
+	print("reseted")
 	SystemRun()
+	print("SystemRun")
 	devInfo := GetSystemInfo()
 	lut := wordsToString(devInfo.LUTVersion)
 	fmt.Printf("lut: %s\n", lut)

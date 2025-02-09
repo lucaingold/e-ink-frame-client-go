@@ -48,8 +48,8 @@ func main() {
 		fmt.Printf("Message: %s \n", m.Payload())
 		fmt.Printf("Topic: %s \n", m.Topic())
 
-		fmt.Printf("Received message on topic %s\n", m.Topic())
-		imagePath := "./img/sample.jpeg"
+		// fmt.Printf("Received message on topic %s\n", m.Topic())
+		imagePath := "/img/sample.jpeg"
 
 		// Read the image file
 		imageBytes, err := os.ReadFile(imagePath)

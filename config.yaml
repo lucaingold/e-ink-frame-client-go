@@ -2,7 +2,7 @@ mqtt:
   broker: "1267e5cf620940ea957ccaedca8add6a.s2.eu.hivemq.cloud"
   port: 8883
   username: "einkframe"
-  password: ""
+  password: "36WLktfFjTr2J0LxZ52ZFVuFJs"
   topic: "test/topic"
   device_id_placeholder: "{device_id}"
   topic_image_display: "device/{device_id}/image/display"

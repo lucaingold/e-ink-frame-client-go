@@ -167,7 +167,9 @@ func Debug(format string, args ...interface{}) {
 
 // Init the EPD modules with desired VCOM value
 func Init(vcom uint16) *DevInfo {
+	print("start opening")
 	err := Open()
+	print("opened")
 	if err != nil {
 		return nil
 	}
